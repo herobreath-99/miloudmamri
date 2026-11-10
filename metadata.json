@@ -1,0 +1,7 @@
+{
+  "name": "PinkCare",
+  "description": "Comprehensive breast cancer rehabilitation, psychological support, and daily care platform with authentic Algerian Darija, Arabic, French, and English support.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
