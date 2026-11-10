@@ -346,395 +346,392 @@ export function RehabilitationCanvas({
   const normalizedDeg = Math.round(((rotateY % 360) + 360) % 360);
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full rounded-[32px] overflow-hidden select-none border border-fuchsia-400/35 shadow-2xl transition-all duration-300 ${
-        isFullscreen
-          ? "fixed inset-0 z-50 rounded-none border-none bg-slate-950 flex items-center justify-center"
-          : "h-[460px] sm:h-[520px]"
-      }`}
-      style={{
-        background:
-          "radial-gradient(circle at 50% 30%, oklch(0.32 0.14 315) 0%, oklch(0.14 0.08 300) 60%, oklch(0.09 0.04 290) 100%)",
-      }}
-      onWheel={handleWheel}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* ==================== 3D INTERACTION STAGE ==================== */}
+    <div className="w-full space-y-3">
+      {/* ==================== 3D MODEL CANVAS CONTAINER ==================== */}
       <div
-        className="absolute inset-0 w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
+        ref={containerRef}
+        className={`relative w-full rounded-[32px] overflow-hidden select-none border border-fuchsia-400/35 shadow-2xl transition-all duration-300 ${
+          isFullscreen
+            ? "fixed inset-0 z-50 rounded-none border-none bg-slate-950 flex items-center justify-center"
+            : "h-[460px] sm:h-[520px]"
+        }`}
+        style={{
+          background:
+            "radial-gradient(circle at 50% 30%, oklch(0.32 0.14 315) 0%, oklch(0.14 0.08 300) 60%, oklch(0.09 0.04 290) 100%)",
+        }}
+        onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
+        {/* ==================== 3D INTERACTION STAGE ==================== */}
         <div
-          className="relative w-full h-full flex items-center justify-center"
-          style={{ perspective: "1200px" }}
+          className="absolute inset-0 w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing touch-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
         >
           <div
             className="relative w-full h-full flex items-center justify-center"
-            style={{
-              transform: `perspective(1200px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(${zoom * breathScale})`,
-              transformOrigin: "50% 55%",
-              transition:
-                dragRef.current || isPinching
-                  ? "none"
-                  : "transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1)",
-              transformStyle: "preserve-3d",
-            }}
+            style={{ perspective: "1200px" }}
           >
-            {/* The Authentic Character & Stage from Reference Image */}
-            <img
-              src={stageCharacterImg}
-              alt="PinkCare 3D Fitness Model"
-              className="w-full h-full object-contain pointer-events-none drop-shadow-[0_20px_40px_rgba(219,39,119,0.35)]"
-            />
-
-            {/* ==================== INTERACTIVE JOINT & MUSCLE HOTSPOTS LAYER ==================== */}
-            {/* (Click/tap to highlight specific joints or muscle groups relevant to the selected exercise) */}
-            {showJointHotspots &&
-              JOINT_HOTSPOTS.map((hotspot) => {
-                const isActive = hotspot.id === activeJointId;
-                const isRelevantToExercise = hotspot.relevantCategories.includes(exercise.category);
-
-                return (
-                  <button
-                    key={hotspot.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActiveJointId(hotspot.id);
-                    }}
-                    className={`absolute z-30 transition-transform cursor-pointer focus:outline-none -translate-x-1/2 -translate-y-1/2 group ${
-                      isActive ? "scale-125 z-40" : "hover:scale-115"
-                    }`}
-                    style={{
-                      top: `${hotspot.topPercent}%`,
-                      left: `${hotspot.leftPercent}%`,
-                    }}
-                    title={lang === "ar" ? hotspot.name_ar : hotspot.name_en}
-                    aria-label={lang === "ar" ? hotspot.name_ar : hotspot.name_en}
-                  >
-                    <div className="relative flex items-center justify-center">
-                      {/* Active pulsating ripple waves */}
-                      {isActive && (
-                        <>
-                          <span
-                            className={`absolute w-12 h-12 rounded-full animate-ping opacity-60 ${
-                              hotspot.color === "amber"
-                                ? "bg-amber-400"
-                                : hotspot.color === "fuchsia"
-                                  ? "bg-fuchsia-400"
-                                  : hotspot.color === "emerald"
-                                    ? "bg-emerald-400"
-                                    : hotspot.color === "purple"
-                                      ? "bg-purple-400"
-                                      : "bg-cyan-400"
-                            }`}
-                          />
-                          <span
-                            className={`absolute w-8 h-8 rounded-full animate-ping opacity-75 ${
-                              hotspot.color === "amber"
-                                ? "bg-amber-300"
-                                : hotspot.color === "fuchsia"
-                                  ? "bg-pink-400"
-                                  : hotspot.color === "emerald"
-                                    ? "bg-teal-300"
-                                    : hotspot.color === "purple"
-                                      ? "bg-violet-300"
-                                      : "bg-sky-300"
-                            }`}
-                            style={{ animationDelay: "0.35s" }}
-                          />
-                        </>
-                      )}
-
-                      {/* Center Beacon Orb */}
-                      <span
-                        className={`w-5 h-5 rounded-full flex items-center justify-center transition-all border ${
-                          isActive
-                            ? "bg-gradient-to-tr from-amber-400 to-yellow-200 border-white shadow-[0_0_18px_rgba(251,191,36,0.95)] ring-2 ring-amber-300/60"
-                            : isRelevantToExercise
-                              ? "bg-fuchsia-500/80 border-fuchsia-200/90 shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-pulse"
-                              : "bg-slate-900/80 border-fuchsia-300/40 opacity-70 hover:opacity-100"
-                        }`}
-                      >
-                        <span
-                          className={`w-2 h-2 rounded-full ${
-                            isActive
-                              ? "bg-amber-900"
-                              : isRelevantToExercise
-                                ? "bg-white"
-                                : "bg-fuchsia-300"
-                          }`}
-                        />
-                      </span>
-
-                      {/* Small Label Pin on Hover/Active */}
-                      {isActive && (
-                        <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-full bg-slate-900/95 border border-amber-400/60 text-[9px] font-bold text-amber-200 shadow-xl pointer-events-none animate-fadeIn flex items-center gap-1">
-                          <Target className="w-2.5 h-2.5 text-amber-400 shrink-0" />
-                          <span>{lang === "ar" ? hotspot.name_ar : hotspot.name_en}</span>
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-
-            {/* Live Radiant Floating Waist Halo Overlay */}
             <div
-              className={`absolute pointer-events-none w-[280px] h-[75px] rounded-full border-2 border-fuchsia-300/80 shadow-[0_0_30px_rgba(236,72,153,0.7)] transition-transform duration-700 ${
-                isRunning ? "animate-pulse" : ""
-              }`}
+              className="relative w-full h-full flex items-center justify-center"
               style={{
-                top: "40.5%",
-                left: "50%",
-                transform: "translate(-50%, -50%) perspective(400px) rotateX(68deg) rotateZ(-6deg)",
+                transform: `perspective(1200px) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale(${zoom * breathScale})`,
+                transformOrigin: "50% 55%",
+                transition:
+                  dragRef.current || isPinching
+                    ? "none"
+                    : "transform 0.4s cubic-bezier(0.2, 0.8, 0.25, 1)",
+                transformStyle: "preserve-3d",
               }}
-            />
+            >
+              {/* The Authentic Character & Stage from Reference Image */}
+              <img
+                src={stageCharacterImg}
+                alt="PinkCare 3D Fitness Model"
+                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_20px_40px_rgba(219,39,119,0.35)]"
+              />
+
+              {/* ==================== INTERACTIVE JOINT & MUSCLE HOTSPOTS LAYER ==================== */}
+              {/* (Click/tap to highlight specific joints or muscle groups relevant to the selected exercise) */}
+              {showJointHotspots &&
+                JOINT_HOTSPOTS.map((hotspot) => {
+                  const isActive = hotspot.id === activeJointId;
+                  const isRelevantToExercise = hotspot.relevantCategories.includes(
+                    exercise.category,
+                  );
+
+                  return (
+                    <button
+                      key={hotspot.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveJointId(hotspot.id);
+                      }}
+                      className={`absolute z-30 transition-transform cursor-pointer focus:outline-none -translate-x-1/2 -translate-y-1/2 group ${
+                        isActive ? "scale-125 z-40" : "hover:scale-115"
+                      }`}
+                      style={{
+                        top: `${hotspot.topPercent}%`,
+                        left: `${hotspot.leftPercent}%`,
+                      }}
+                      title={lang === "ar" ? hotspot.name_ar : hotspot.name_en}
+                      aria-label={lang === "ar" ? hotspot.name_ar : hotspot.name_en}
+                    >
+                      <div className="relative flex items-center justify-center">
+                        {/* Active pulsating ripple waves */}
+                        {isActive && (
+                          <>
+                            <span
+                              className={`absolute w-12 h-12 rounded-full animate-ping opacity-60 ${
+                                hotspot.color === "amber"
+                                  ? "bg-amber-400"
+                                  : hotspot.color === "fuchsia"
+                                    ? "bg-fuchsia-400"
+                                    : hotspot.color === "emerald"
+                                      ? "bg-emerald-400"
+                                      : hotspot.color === "purple"
+                                        ? "bg-purple-400"
+                                        : "bg-cyan-400"
+                              }`}
+                            />
+                            <span
+                              className={`absolute w-8 h-8 rounded-full animate-ping opacity-75 ${
+                                hotspot.color === "amber"
+                                  ? "bg-amber-300"
+                                  : hotspot.color === "fuchsia"
+                                    ? "bg-pink-400"
+                                    : hotspot.color === "emerald"
+                                      ? "bg-teal-300"
+                                      : hotspot.color === "purple"
+                                        ? "bg-violet-300"
+                                        : "bg-sky-300"
+                              }`}
+                              style={{ animationDelay: "0.35s" }}
+                            />
+                          </>
+                        )}
+
+                        {/* Center Beacon Orb */}
+                        <span
+                          className={`w-5 h-5 rounded-full flex items-center justify-center transition-all border ${
+                            isActive
+                              ? "bg-gradient-to-tr from-amber-400 to-yellow-200 border-white shadow-[0_0_18px_rgba(251,191,36,0.95)] ring-2 ring-amber-300/60"
+                              : isRelevantToExercise
+                                ? "bg-fuchsia-500/80 border-fuchsia-200/90 shadow-[0_0_12px_rgba(236,72,153,0.8)] animate-pulse"
+                                : "bg-slate-900/80 border-fuchsia-300/40 opacity-70 hover:opacity-100"
+                          }`}
+                        >
+                          <span
+                            className={`w-2 h-2 rounded-full ${
+                              isActive
+                                ? "bg-amber-900"
+                                : isRelevantToExercise
+                                  ? "bg-white"
+                                  : "bg-fuchsia-300"
+                            }`}
+                          />
+                        </span>
+
+                        {/* Small Label Pin on Hover/Active */}
+                        {isActive && (
+                          <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded-full bg-slate-900/95 border border-amber-400/60 text-[9px] font-bold text-amber-200 shadow-xl pointer-events-none animate-fadeIn flex items-center gap-1">
+                            <Target className="w-2.5 h-2.5 text-amber-400 shrink-0" />
+                            <span>{lang === "ar" ? hotspot.name_ar : hotspot.name_en}</span>
+                          </div>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+
+              {/* Live Radiant Floating Waist Halo Overlay */}
+              <div
+                className={`absolute pointer-events-none w-[280px] h-[75px] rounded-full border-2 border-fuchsia-300/80 shadow-[0_0_30px_rgba(236,72,153,0.7)] transition-transform duration-700 ${
+                  isRunning ? "animate-pulse" : ""
+                }`}
+                style={{
+                  top: "40.5%",
+                  left: "50%",
+                  transform:
+                    "translate(-50%, -50%) perspective(400px) rotateX(68deg) rotateZ(-6deg)",
+                }}
+              />
+            </div>
           </div>
         </div>
+
+        {/* Atmospheric lighting gradients */}
+        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-fuchsia-950/40 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none" />
+
+        {/* ==================== PINCH / ZOOM FEEDBACK BADGE ==================== */}
+        {pinchFeedback && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none animate-fadeIn">
+            <div className="px-4 py-2 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-pink-400/50 text-white font-mono font-bold text-sm shadow-[0_0_24px_rgba(236,72,153,0.6)] flex items-center gap-2">
+              <ZoomIn className="w-4 h-4 text-pink-400" />
+              <span>{pinchFeedback}</span>
+            </div>
+          </div>
+        )}
+
+        {/* ==================== FLOATING JOINT INSPECTION SPOTLIGHT PILL ==================== */}
+        {/* (Shows details of the currently selected joint / muscle group when clicked) */}
+        {activeJoint && (
+          <div className="absolute bottom-2.5 inset-x-3 sm:inset-x-6 z-20">
+            <div className="rounded-2xl bg-slate-900/85 backdrop-blur-xl border border-fuchsia-400/35 p-2.5 sm:p-3 shadow-2xl flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${
+                    activeJoint.color === "amber"
+                      ? "bg-amber-500/20 text-amber-300 border-amber-400/40"
+                      : activeJoint.color === "fuchsia"
+                        ? "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40"
+                        : activeJoint.color === "emerald"
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
+                          : "bg-purple-500/20 text-purple-300 border-purple-400/40"
+                  }`}
+                >
+                  <Target className="w-4 h-4" />
+                </div>
+
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-bold text-white truncate">
+                      {lang === "ar" ? activeJoint.name_ar : activeJoint.name_en}
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded-md bg-fuchsia-500/20 text-fuchsia-200 text-[9px] font-medium shrink-0">
+                      {lang === "ar" ? "نقطة مستهدفة" : "Target"}
+                    </span>
+                  </div>
+                  <p className="text-[10.5px] text-fuchsia-200/80 truncate">
+                    {lang === "ar" ? activeJoint.action_ar : activeJoint.action_en}
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Actions for Active Joint */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => focusOnJoint(activeJoint)}
+                  className="px-2.5 py-1 rounded-xl bg-pink-500/25 hover:bg-pink-500/35 border border-pink-400/40 text-[10px] font-semibold text-pink-200 hover:text-white transition-all flex items-center gap-1"
+                  title={lang === "ar" ? "تكبير وتركيز الكاميرا" : "Focus on joint"}
+                >
+                  <Eye className="w-3 h-3" />
+                  <span className="hidden sm:inline">{lang === "ar" ? "تركيز" : "Focus"}</span>
+                </button>
+
+                <button
+                  onClick={() => setShowAnatomyModal(true)}
+                  className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 text-fuchsia-200 hover:text-white flex items-center justify-center transition-all"
+                  title={lang === "ar" ? "تفاصيل إضافية" : "More details"}
+                >
+                  <Info className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Atmospheric lighting gradients */}
-      <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-fuchsia-950/40 via-transparent to-transparent pointer-events-none" />
-      <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent pointer-events-none" />
-
-      {/* ==================== LEFT FLOATING PILL: 360° / ZOOM ==================== */}
-      {/* (Faithfully matching the left floating rounded glass pill in reference screenshot!) */}
-      <div className="absolute top-12 sm:top-14 start-3.5 z-20 flex flex-col items-center">
-        <div className="flex flex-col items-center p-1.5 sm:p-2 rounded-[24px] bg-slate-900/75 backdrop-blur-xl border border-fuchsia-400/35 shadow-[0_8px_32px_rgba(236,72,153,0.3)] space-y-2">
-          {/* 360° Rotation Toggle */}
+      {/* ==================== CLEAN FLEX-BASED CONTROL BAR (POSITIONED STRICTLY BELOW CANVAS) ==================== */}
+      <div className="rounded-2xl p-2.5 bg-slate-900/85 backdrop-blur-xl border border-fuchsia-400/30 shadow-lg space-y-2">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          {/* 360° Rotate */}
           <button
-            onClick={() => setAutoRotate((a) => !a)}
-            className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex flex-col items-center justify-center transition-all ${
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setAutoRotate((a) => !a);
+            }}
+            className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 text-xs font-bold transition-all backdrop-blur-md border ${
               autoRotate
-                ? "bg-gradient-to-b from-fuchsia-500 to-pink-600 text-white shadow-lg shadow-fuchsia-500/50 scale-105"
-                : "text-fuchsia-100 hover:text-white hover:bg-white/10"
+                ? "bg-gradient-to-r from-fuchsia-500 to-pink-600 text-white shadow-lg shadow-fuchsia-500/50 border-pink-300"
+                : "bg-white/5 text-fuchsia-100 hover:text-white border-fuchsia-400/30 hover:bg-white/10"
             }`}
             title={lang === "ar" ? "إدارة النموذج 360°" : "360° Rotation"}
           >
-            <span className="text-xs font-bold font-mono">360°</span>
-            <span className="text-[8px] font-semibold tracking-tighter mt-0.5">
-              {lang === "ar" ? "إدارة النموذج" : "Rotate"}
-            </span>
-          </button>
-
-          <div className="w-8 h-px bg-fuchsia-400/25" />
-
-          {/* Zoom In Button */}
-          <button
-            onClick={() => handleZoom(0.2)}
-            className="w-10 h-10 rounded-xl flex flex-col items-center justify-center text-fuchsia-100 hover:text-white hover:bg-white/15 transition-all"
-            title={lang === "ar" ? "تكبير" : "Zoom in"}
-          >
-            <ZoomIn className="w-4 h-4" />
-            <span className="text-[8px] mt-0.5 font-medium">
-              {lang === "ar" ? "تكبير" : "Zoom +"}
-            </span>
-          </button>
-
-          {/* Zoom Out Button */}
-          <button
-            onClick={() => handleZoom(-0.2)}
-            className="w-10 h-10 rounded-xl flex flex-col items-center justify-center text-fuchsia-100 hover:text-white hover:bg-white/15 transition-all"
-            title={lang === "ar" ? "تصغير" : "Zoom out"}
-          >
-            <ZoomOut className="w-4 h-4" />
-            <span className="text-[8px] mt-0.5 font-medium">
-              {lang === "ar" ? "تصغير" : "Zoom -"}
-            </span>
-          </button>
-
-          <div className="w-8 h-px bg-fuchsia-400/25" />
-
-          {/* Toggle Joint Hotspots Visibility */}
-          <button
-            onClick={() => setShowJointHotspots((s) => !s)}
-            className={`w-10 h-10 rounded-xl flex flex-col items-center justify-center transition-all ${
-              showJointHotspots
-                ? "bg-fuchsia-500/25 text-pink-300 border border-fuchsia-400/40"
-                : "text-fuchsia-300/60 hover:text-white"
-            }`}
-            title={lang === "ar" ? "إظهار/إخفاء نقاط المفاصل" : "Toggle Joint Hotspots"}
-          >
-            <Layers className="w-4 h-4" />
-            <span className="text-[7.5px] mt-0.5 font-medium">
-              {lang === "ar" ? "المفاصل" : "Joints"}
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* ==================== RIGHT FLOATING CARD: ANATOMICAL TARGET INSET ==================== */}
-      {/* (Faithfully matching the glowing shoulder/chest anatomical card in reference screenshot!) */}
-      <div className="absolute top-12 sm:top-14 end-3.5 z-20 flex flex-col items-end">
-        <button
-          onClick={() => setShowAnatomyModal(true)}
-          className="w-24 sm:w-28 rounded-[22px] bg-slate-900/80 backdrop-blur-xl border border-fuchsia-400/40 overflow-hidden shadow-[0_8px_32px_rgba(236,72,153,0.35)] transition-transform hover:scale-105 active:scale-95 text-start cursor-pointer group"
-          title={lang === "ar" ? "عرض الخريطة التشريحية للمفصل" : "View anatomical target"}
-        >
-          {/* Anatomical Holographic Render Image */}
-          <div className="relative aspect-[3/4] w-full bg-slate-950 flex items-center justify-center overflow-hidden">
-            <img
-              src={shoulderAnatomyImg}
-              alt="Anatomical muscle & joint target"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            <RotateCw
+              className={`w-3.5 h-3.5 ${autoRotate ? "animate-spin text-white" : "text-pink-400"}`}
             />
-            {/* Live animated target crosshair ping */}
-            <div className="absolute top-[28%] end-[24%] pointer-events-none">
-              <span className="relative flex h-3.5 w-3.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-80" />
-                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500/90 border border-amber-300" />
-              </span>
-            </div>
-          </div>
-
-          {/* Card Label Bottom Pill */}
-          <div className="px-2 py-1.5 bg-slate-900/95 border-t border-fuchsia-400/25 flex items-center justify-center gap-1">
-            <Crosshair className="w-3 h-3 text-pink-400 group-hover:rotate-45 transition-transform" />
-            <span className="text-[10px] font-bold text-white tracking-tight">
-              {lang === "ar" ? "منطقة التمرين" : "Target Area"}
+            <span>360°</span>
+            <span className="text-[10px] font-normal opacity-90 hidden sm:inline">
+              {lang === "ar" ? "تدوير تلقائي" : "Auto-rotate"}
             </span>
+          </button>
+
+          {/* Zoom Controls (- / % / +) */}
+          <div className="flex items-center gap-1 bg-slate-950/70 p-0.5 rounded-xl border border-fuchsia-400/30">
+            <button
+              type="button"
+              disabled={zoom <= 0.75}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleZoom(-0.2);
+              }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-fuchsia-100 hover:text-white hover:bg-pink-500/20 disabled:opacity-40 transition"
+              title={lang === "ar" ? "تصغير (-)" : "Zoom out (-)"}
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+
+            <span className="text-[10px] font-bold text-fuchsia-200 px-1.5 min-w-[38px] text-center tabular-nums">
+              {Math.round(zoom * 100)}%
+            </span>
+
+            <button
+              type="button"
+              disabled={zoom >= 2.0}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleZoom(0.2);
+              }}
+              className="w-7 h-7 rounded-lg flex items-center justify-center text-fuchsia-100 hover:text-white hover:bg-pink-500/20 disabled:opacity-40 transition"
+              title={lang === "ar" ? "تكبير (+)" : "Zoom in (+)"}
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
           </div>
-        </button>
+
+          {/* Reset Camera Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              resetCamera();
+            }}
+            className="px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-fuchsia-100 hover:text-white flex items-center gap-1.5 text-xs font-semibold border border-fuchsia-400/30 transition backdrop-blur-md"
+            title={lang === "ar" ? "إعادة ضبط الكاميرا" : "Reset view"}
+          >
+            <RotateCw className="w-3.5 h-3.5 text-pink-400" />
+            <span className="text-[11px]">{lang === "ar" ? "إعادة ضبط" : "Reset"}</span>
+          </button>
+        </div>
+
+        {/* Bottom Row: Angle presets, Fullscreen & Target Area */}
+        <div className="flex items-center justify-between gap-2 pt-1 border-t border-fuchsia-400/20 text-xs">
+          <div className="flex items-center gap-1 p-0.5 rounded-xl bg-slate-950/60 border border-fuchsia-400/25 text-[10px]">
+            <button
+              type="button"
+              onClick={() => setCameraAngle(0, 0, 1)}
+              className={`px-2 py-0.5 rounded-lg transition-all ${
+                rotateY === 0
+                  ? "bg-fuchsia-500 text-white font-bold"
+                  : "text-fuchsia-200 hover:text-white"
+              }`}
+            >
+              {lang === "ar" ? "أمامي" : "Front"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCameraAngle(45, -2, 1)}
+              className={`px-2 py-0.5 rounded-lg transition-all ${
+                rotateY === 45
+                  ? "bg-fuchsia-500 text-white font-bold"
+                  : "text-fuchsia-200 hover:text-white"
+              }`}
+            >
+              45°
+            </button>
+            <button
+              type="button"
+              onClick={() => setCameraAngle(90, 0, 1)}
+              className={`px-2 py-0.5 rounded-lg transition-all ${
+                rotateY === 90
+                  ? "bg-fuchsia-500 text-white font-bold"
+                  : "text-fuchsia-200 hover:text-white"
+              }`}
+            >
+              {lang === "ar" ? "جانبي" : "Side"}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {/* Toggle Joint Hotspots */}
+            <button
+              type="button"
+              onClick={() => setShowJointHotspots((s) => !s)}
+              className={`px-2 py-1 rounded-xl text-[10px] font-medium flex items-center gap-1 border transition-all ${
+                showJointHotspots
+                  ? "bg-fuchsia-500/25 text-pink-300 border-fuchsia-400/40"
+                  : "bg-white/5 text-fuchsia-300/60 border-fuchsia-400/20 hover:text-white"
+              }`}
+              title={lang === "ar" ? "إظهار/إخفاء نقاط المفاصل" : "Toggle Joint Hotspots"}
+            >
+              <Layers className="w-3 h-3" />
+              <span>{lang === "ar" ? "المفاصل" : "Joints"}</span>
+            </button>
+
+            {/* Target Area Modal Trigger */}
+            <button
+              type="button"
+              onClick={() => setShowAnatomyModal(true)}
+              className="px-2 py-1 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-fuchsia-400/30 text-[10px] font-bold text-white flex items-center gap-1 transition"
+              title={lang === "ar" ? "عرض الخريطة التشريحية" : "View anatomical target"}
+            >
+              <Crosshair className="w-3 h-3 text-pink-400" />
+              <span>{lang === "ar" ? "منطقة التمرين" : "Target"}</span>
+            </button>
+
+            {/* Fullscreen toggle */}
+            <button
+              type="button"
+              onClick={() => setIsFullscreen((f) => !f)}
+              className="w-7 h-7 rounded-xl bg-white/5 hover:bg-white/15 border border-fuchsia-400/25 text-fuchsia-200 hover:text-white flex items-center justify-center transition-all"
+              title={lang === "ar" ? "شاشة كاملة" : "Fullscreen"}
+            >
+              {isFullscreen ? (
+                <Minimize2 className="w-3.5 h-3.5" />
+              ) : (
+                <Maximize2 className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+        </div>
       </div>
-
-      {/* ==================== TOP NAVIGATION DOCK: ANGLES, ROTATION & FULLSCREEN ==================== */}
-      <div className="absolute top-3 end-3 z-20 flex items-center gap-1.5">
-        {/* Preset Angle Buttons */}
-        <div className="hidden sm:flex items-center gap-1 p-0.5 rounded-xl bg-slate-900/80 backdrop-blur-md border border-fuchsia-400/30 text-[10px]">
-          <button
-            onClick={() => setCameraAngle(0, 0, 1)}
-            className={`px-2 py-0.5 rounded-lg transition-all ${
-              rotateY === 0
-                ? "bg-fuchsia-500 text-white font-bold"
-                : "text-fuchsia-200 hover:text-white"
-            }`}
-          >
-            {lang === "ar" ? "أمامي" : "Front"}
-          </button>
-          <button
-            onClick={() => setCameraAngle(45, -2, 1)}
-            className={`px-2 py-0.5 rounded-lg transition-all ${
-              rotateY === 45
-                ? "bg-fuchsia-500 text-white font-bold"
-                : "text-fuchsia-200 hover:text-white"
-            }`}
-          >
-            45°
-          </button>
-          <button
-            onClick={() => setCameraAngle(90, 0, 1)}
-            className={`px-2 py-0.5 rounded-lg transition-all ${
-              rotateY === 90
-                ? "bg-fuchsia-500 text-white font-bold"
-                : "text-fuchsia-200 hover:text-white"
-            }`}
-          >
-            {lang === "ar" ? "جانبي" : "Side"}
-          </button>
-        </div>
-
-        {/* Current Rotation Angle Pill */}
-        <div className="px-2 py-1 rounded-full bg-slate-900/80 backdrop-blur-md border border-fuchsia-400/30 text-[10px] font-mono text-fuchsia-200 flex items-center gap-1">
-          <Activity className="w-3 h-3 text-pink-400" />
-          <span>{normalizedDeg}°</span>
-        </div>
-
-        {/* Reset Camera button */}
-        <button
-          onClick={resetCamera}
-          className="w-7 h-7 rounded-full bg-slate-900/80 backdrop-blur-md border border-fuchsia-400/30 text-fuchsia-200 hover:text-white flex items-center justify-center transition-all"
-          title={lang === "ar" ? "إعادة ضبط الكاميرا" : "Reset view"}
-        >
-          <RotateCw className="w-3.5 h-3.5" />
-        </button>
-
-        {/* Fullscreen toggle */}
-        <button
-          onClick={() => setIsFullscreen((f) => !f)}
-          className="w-7 h-7 rounded-full bg-slate-900/80 backdrop-blur-md border border-fuchsia-400/30 text-fuchsia-200 hover:text-white flex items-center justify-center transition-all"
-          title={lang === "ar" ? "شاشة كاملة" : "Fullscreen"}
-        >
-          {isFullscreen ? (
-            <Minimize2 className="w-3.5 h-3.5" />
-          ) : (
-            <Maximize2 className="w-3.5 h-3.5" />
-          )}
-        </button>
-      </div>
-
-      {/* ==================== PINCH / ZOOM FEEDBACK BADGE ==================== */}
-      {pinchFeedback && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 pointer-events-none animate-fadeIn">
-          <div className="px-4 py-2 rounded-2xl bg-slate-950/85 backdrop-blur-md border border-pink-400/50 text-white font-mono font-bold text-sm shadow-[0_0_24px_rgba(236,72,153,0.6)] flex items-center gap-2">
-            <ZoomIn className="w-4 h-4 text-pink-400" />
-            <span>{pinchFeedback}</span>
-          </div>
-        </div>
-      )}
-
-      {/* ==================== FLOATING JOINT INSPECTION SPOTLIGHT PILL ==================== */}
-      {/* (Shows details of the currently selected joint / muscle group when clicked) */}
-      {activeJoint && (
-        <div className="absolute bottom-2.5 inset-x-3 sm:inset-x-6 z-20">
-          <div className="rounded-2xl bg-slate-900/85 backdrop-blur-xl border border-fuchsia-400/35 p-2.5 sm:p-3 shadow-2xl flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div
-                className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${
-                  activeJoint.color === "amber"
-                    ? "bg-amber-500/20 text-amber-300 border-amber-400/40"
-                    : activeJoint.color === "fuchsia"
-                      ? "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40"
-                      : activeJoint.color === "emerald"
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-400/40"
-                        : "bg-purple-500/20 text-purple-300 border-purple-400/40"
-                }`}
-              >
-                <Target className="w-4 h-4" />
-              </div>
-
-              <div className="min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-bold text-white truncate">
-                    {lang === "ar" ? activeJoint.name_ar : activeJoint.name_en}
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded-md bg-fuchsia-500/20 text-fuchsia-200 text-[9px] font-medium shrink-0">
-                    {lang === "ar" ? "نقطة مستهدفة" : "Target"}
-                  </span>
-                </div>
-                <p className="text-[10.5px] text-fuchsia-200/80 truncate">
-                  {lang === "ar" ? activeJoint.action_ar : activeJoint.action_en}
-                </p>
-              </div>
-            </div>
-
-            {/* Quick Actions for Active Joint */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                onClick={() => focusOnJoint(activeJoint)}
-                className="px-2.5 py-1 rounded-xl bg-pink-500/25 hover:bg-pink-500/35 border border-pink-400/40 text-[10px] font-semibold text-pink-200 hover:text-white transition-all flex items-center gap-1"
-                title={lang === "ar" ? "تكبير وتركيز الكاميرا" : "Focus on joint"}
-              >
-                <Eye className="w-3 h-3" />
-                <span className="hidden sm:inline">{lang === "ar" ? "تركيز" : "Focus"}</span>
-              </button>
-
-              <button
-                onClick={() => setShowAnatomyModal(true)}
-                className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 text-fuchsia-200 hover:text-white flex items-center justify-center transition-all"
-                title={lang === "ar" ? "تفاصيل إضافية" : "More details"}
-              >
-                <Info className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ==================== ANATOMICAL TARGET MODAL ==================== */}
       {showAnatomyModal && (
