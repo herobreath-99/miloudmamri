@@ -59,6 +59,23 @@ export default defineConfig({
         "rollup:before": onRollupBefore,
       },
     },
+    optimizeDeps: {
+      include: [
+        "@supabase/supabase-js",
+        "@tanstack/react-query",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-tabs",
+        "@radix-ui/react-tooltip",
+        "class-variance-authority",
+        "clsx",
+        "lucide-react",
+        "recharts",
+        "sonner",
+        "tailwind-merge",
+        "three",
+        "zod",
+      ],
+    },
     server: {
       host: "0.0.0.0",
       port: 3000,
