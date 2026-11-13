@@ -57,13 +57,24 @@ function createSupabaseFetch(supabaseUrl: string, supabaseKey: string): typeof f
 const DEFAULT_SUPABASE_URL = "https://vuvmptsfrywehibxeern.supabase.co";
 const DUMMY_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy";
 
+let runtimeSupabaseUrl: string | undefined;
+let runtimeSupabaseAnonKey: string | undefined;
+
+function readServerEnv(name: string): string | undefined {
+  if (typeof process === "undefined" || !process.env) return undefined;
+  return process.env[name];
+}
+
 export function getActiveSupabaseUrl(): string {
   if (typeof window !== "undefined") {
     const local = localStorage.getItem("pc_supabase_url");
     if (local && local.startsWith("https://")) return local;
   }
   return (
-    import.meta.env["VITE_SUPABASE_URL"] || process.env["SUPABASE_URL"] || DEFAULT_SUPABASE_URL
+    import.meta.env["VITE_SUPABASE_URL"] ||
+    runtimeSupabaseUrl ||
+    readServerEnv("SUPABASE_URL") ||
+    DEFAULT_SUPABASE_URL
   );
 }
 
@@ -74,7 +85,8 @@ export function getActiveSupabaseAnonKey(): string {
   }
   return (
     import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
-    process.env["SUPABASE_PUBLISHABLE_KEY"] ||
+    runtimeSupabaseAnonKey ||
+    readServerEnv("SUPABASE_PUBLISHABLE_KEY") ||
     DUMMY_KEY
   );
 }
@@ -89,6 +101,22 @@ export function isSupabaseConfigured(): boolean {
     key !== DUMMY_KEY &&
     key.length > 30
   );
+}
+
+export function applyRuntimeSupabaseConfig(url?: string | null, anonKey?: string | null): boolean {
+  let changed = false;
+  if (url && url.startsWith("https://") && url !== runtimeSupabaseUrl) {
+    runtimeSupabaseUrl = url.trim();
+    changed = true;
+  }
+  if (anonKey && anonKey.length > 30 && anonKey !== runtimeSupabaseAnonKey) {
+    runtimeSupabaseAnonKey = anonKey.trim();
+    changed = true;
+  }
+  if (changed) {
+    _supabase = undefined;
+  }
+  return changed;
 }
 
 export function setCustomSupabaseCredentials(url?: string, anonKey?: string) {

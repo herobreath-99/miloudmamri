@@ -91,6 +91,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Partage d'expériences vécues",
     nameDz: "تبادل القصص والتجارب اليومية",
     nameEn: "Personal Journey & Story Exchange",
+    descriptionAr: "مشاركة التجارب الشخصية وقصص الأمل والانتصار اليومية لإلهام الأخوات ومواساتهن.",
+    descriptionFr:
+      "Partage d'expériences vécues et de récits inspirants pour encourager chaque femme.",
+    descriptionDz: "مشاركة القصص والتجارب اليومية باش كل أخت تستلهم القوة والأمل.",
+    descriptionEn:
+      "Sharing personal journeys, everyday milestones, and uplifting stories to inspire one another.",
     category: "journey",
     icon: "📖",
     rulesAr:
@@ -115,6 +121,13 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Phase de diagnostic et examens",
     nameDz: "مرحلة الفحوصات والتحاليل الأولى",
     nameEn: "Diagnosis & Screening Journey",
+    descriptionAr:
+      "مساحة مطمئنة للأسئلة والاستعداد النفسي أثناء مرحلة الفحوصات والتحاليل وانتظار النتائج.",
+    descriptionFr:
+      "Un espace rassurant pour les étapes de dépistage, bilans et attente des résultats.",
+    descriptionDz: "مساحة مطمئنة لمرحلة التحاليل والفحوصات وانتظار النتائج بلا خوف.",
+    descriptionEn:
+      "A reassuring space during diagnostic imaging, biopsies, and waiting for test results.",
     category: "diagnosis",
     icon: "🔬",
     rulesAr:
@@ -139,6 +152,13 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Groupe parcours chimiothérapie",
     nameDz: "مرحلة الشيميو (الكيميائي) والنصائح الدافية",
     nameEn: "Chemotherapy Phase Support",
+    descriptionAr:
+      "تجمع داعم لتبادل نصائح الراحة والتغذية الخفيفة والتعامل اللطيف مع جلسات العلاج الكيميائي.",
+    descriptionFr:
+      "Conseils de confort, astuces contre les nausées et soutien chaleureux durant la chimiothérapie.",
+    descriptionDz: "نصائح الراحة وتجارب التعامل مع جلسات الشيميو بخفة وتضامن.",
+    descriptionEn:
+      "Practical comfort tips and compassionate peer support throughout chemotherapy sessions.",
     category: "chemo",
     icon: "💧",
     rulesAr:
@@ -163,6 +183,13 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Radiothérapie et soins cutanés",
     nameDz: "مرحلة الرايون (الإشعاعي) والعناية بالبشرة",
     nameEn: "Radiation Therapy & Skin Care",
+    descriptionAr:
+      "إرشادات مريحة للعناية بالبشرة واختيار الملابس القطنية المناسبة أثناء جلسات العلاج الإشعاعي.",
+    descriptionFr:
+      "Conseils pratiques pour protéger la peau et choisir des vêtements doux pendant la radiothérapie.",
+    descriptionDz: "نصائح العناية بالبشرة واختيار القش القطني المريح أثناء جلسات الرايون.",
+    descriptionEn:
+      "Gentle skin-protection tips and comfort guidance during radiation therapy sessions.",
     category: "radiation",
     icon: "☀️",
     rulesAr:
@@ -188,6 +215,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Récupération et réadaptation motrice",
     nameDz: "مرحلة التعافي والرجوع للنشاط",
     nameEn: "Recovery & Physical Rehabilitation",
+    descriptionAr: "متابعة تمارين مرونة الذراع والكتف والعودة التدريجية للنشاط اليومي بأمان وثقة.",
+    descriptionFr:
+      "Suivi des exercices de mobilité douce du bras et reprise confiante des activités.",
+    descriptionDz: "متابعة تمارين الذراع والكتف والرجوع للحركة اليومية تدريجياً وبأمان.",
+    descriptionEn:
+      "Tracking gentle shoulder and arm mobility exercises and safe return to daily movement.",
     category: "recovery",
     icon: "🌿",
     rulesAr:
@@ -213,6 +246,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Nutrition et hygiène de vie",
     nameDz: "الماكلة الصحية والريجيم المتوازن",
     nameEn: "Nutrition & Holistic Wellness",
+    descriptionAr: "وصفات غذائية متوازنة ونصائح للترطيب ونمط الحياة الصحي الداعم للمناعة والنشاط.",
+    descriptionFr:
+      "Recettes équilibrées, hydratation et habitudes saines pour soutenir l'énergie et l'immunité.",
+    descriptionDz: "وصفات ماكلة صحية ومتوازنة وشرب الماء لدعم المناعة والنشاط اليومي.",
+    descriptionEn:
+      "Balanced recipes, hydration habits, and holistic lifestyle routines to support energy.",
     category: "nutrition",
     icon: "🥗",
     rulesAr: "وصفات طعام متوازنة وشهية لدعم المناعة والنشاط، دون ترويج لأي حميات قاسية أو مضللة.",
@@ -236,6 +275,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Activité physique adaptée et mobilité",
     nameDz: "الحركة، المشي، وتمارين المرونة",
     nameEn: "Exercise, Mobility & Gentle Fitness",
+    descriptionAr: "مساحة للتحفيز المتبادل على المشي اليومي وتمارين التنفس والتأهيل البدني اللطيف.",
+    descriptionFr:
+      "Motivation mutuelle pour la marche quotidienne, la respiration et la mobilité douce.",
+    descriptionDz: "تشجيع يومي على المشي والتنفس العميق والتمارين الخفيفة.",
+    descriptionEn:
+      "Daily encouragement for gentle walking, breathing exercises, and guided mobility.",
     category: "exercise",
     icon: "🏃‍♀️",
     rulesAr: "تشجيع متبادل على المشي اليومي الخفيف وتمارين التنفس والاسترخاء المعتمدة في التطبيق.",
@@ -259,6 +304,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Témoignages des survivantes et victorieuses",
     nameDz: "قصص المحاربات والناجيات الملهمة",
     nameEn: "Survivors & Thrivers Inspirations",
+    descriptionAr: "قصص ملهمة للناجيات والمتعافيات تنشر الأمل وتضيء الطريق لكل محاربة في رحلتها.",
+    descriptionFr:
+      "Témoignages lumineux de survivantes pour nourrir l'espoir à chaque étape du parcours.",
+    descriptionDz: "قصص حقيقية تاع الناجيات لي تزرع الأمل والقوة في قلب كل محاربة.",
+    descriptionEn:
+      "Uplifting stories from breast cancer survivors celebrating remission and lighting the way forward.",
     category: "survivors",
     icon: "👑",
     rulesAr:
@@ -283,6 +334,12 @@ export const INITIAL_COMMUNITY_GROUPS: CommunityGroup[] = [
     nameFr: "Questions générales et entraide",
     nameDz: "سؤال وجواب واستفسارات عامة",
     nameEn: "General Inquiries & Community Q&A",
+    descriptionAr: "استفسارات عملية يومية وتبادل نصائح التحضير للمواعيد والمستشفى بروح الأخوّة.",
+    descriptionFr:
+      "Questions pratiques du quotidien, préparation aux rendez-vous et entraide bienveillante.",
+    descriptionDz: "أسئلة يومية واستفسارات عملية حول المواعيد وتجهيز الحقيبة وتبادل النصائح.",
+    descriptionEn:
+      "Practical everyday Q&A on appointments, hospital bag prep, and caring community tips.",
     category: "qa",
     icon: "💬",
     rulesAr:
@@ -827,18 +884,26 @@ export function markMessagesAsRead(ids: string[], userId: string): void {
 
 // ----------------- Direct (1-on-1) Conversations -----------------
 
-export function getDirectConversations(): DirectConversation[] {
-  if (typeof window === "undefined") return INITIAL_DIRECT_CONVOS;
-  const raw = localStorage.getItem(DIRECT_CONVOS_KEY);
-  if (!raw) {
-    localStorage.setItem(DIRECT_CONVOS_KEY, JSON.stringify(INITIAL_DIRECT_CONVOS));
-    return INITIAL_DIRECT_CONVOS;
+export function getDirectConversations(userId?: string): DirectConversation[] {
+  let list: DirectConversation[];
+  if (typeof window === "undefined") {
+    list = INITIAL_DIRECT_CONVOS;
+  } else {
+    const raw = localStorage.getItem(DIRECT_CONVOS_KEY);
+    if (!raw) {
+      localStorage.setItem(DIRECT_CONVOS_KEY, JSON.stringify(INITIAL_DIRECT_CONVOS));
+      list = INITIAL_DIRECT_CONVOS;
+    } else {
+      try {
+        list = JSON.parse(raw);
+      } catch {
+        list = INITIAL_DIRECT_CONVOS;
+      }
+    }
   }
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return INITIAL_DIRECT_CONVOS;
-  }
+  return userId
+    ? list.filter((c) => !c.participantIds.length || c.participantIds.includes(userId))
+    : list;
 }
 
 export function saveDirectConversations(convos: DirectConversation[]): void {
@@ -902,14 +967,17 @@ export function getCommunityUserProfiles(): Record<string, CommunityUserProfile>
   }
 }
 
-export function getCommunityUserProfile(userId: string): CommunityUserProfile {
+export function getCommunityUserProfile(
+  userId: string,
+  defaultName = "مستفيدة PinkCare",
+): CommunityUserProfile {
   const all = getCommunityUserProfiles();
   if (all[userId]) return all[userId];
 
   // Default fallback
   return {
     userId,
-    displayName: "مستفيدة PinkCare",
+    displayName: defaultName,
     nickname: "زهرة الأمل 🌸",
     interests: ["الدعم النفسي", "تمارين المرونة", "التغذية الصحية"],
     joinedGroupIds: ["grp-emotional-support", "grp-recovery-rehab"],

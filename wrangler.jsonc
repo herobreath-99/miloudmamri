@@ -6,6 +6,6 @@
   "main": ".output/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
-    "directory": ".output/public"
-  }
+    "directory": ".output/public",
+  },
 }

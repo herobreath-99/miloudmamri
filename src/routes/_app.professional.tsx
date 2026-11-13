@@ -486,7 +486,7 @@ function ProfessionalDashboardPage() {
             setActiveCallBooking(null);
             refreshData();
           }}
-          lang={lang}
+          lang={lang === "ar" || lang === "dz" ? "ar" : "en"}
         />
       )}
     </div>

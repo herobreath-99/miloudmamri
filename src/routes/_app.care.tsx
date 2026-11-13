@@ -238,6 +238,7 @@ function CarePage() {
       {/* QUICK LINK TO EMOTIONAL WELL-BEING */}
       <Link
         to="/wellbeing"
+        search={{ tab: "journal", crisis: false }}
         className="block glass rounded-3xl p-3.5 border border-primary/20 hover:border-primary/40 transition bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-pink-500/10 shadow-xs"
       >
         <div className="flex items-center justify-between">

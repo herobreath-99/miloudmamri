@@ -1,5 +1,6 @@
 // Local-only persistence layer for PinkCare.
 // Everything lives in localStorage under the `pc_*` namespace.
+import type { UserRole } from "@/types/roles";
 
 export type LocalProfile = {
   id: string;
@@ -10,6 +11,7 @@ export type LocalProfile = {
   city?: string | null;
   journey_start?: string | null; // ISO date
   notes?: string | null;
+  role?: UserRole;
   created_at: string;
   updated_at: string;
 };

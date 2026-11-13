@@ -217,12 +217,12 @@ async function executeDispatch(request: Request) {
     process.env.CRON_SECRET ||
     process.env.SUPABASE_PUBLISHABLE_KEY;
 
-  // If secret configured, verify authentication (allow bypass in development or explicit force parameter)
-  const isAuthorized =
-    !expectedSecret ||
-    querySecret === expectedSecret ||
-    authHeader === expectedSecret ||
-    url.searchParams.get("test") === "1";
+  const isProd = process.env.NODE_ENV === "production";
+  const isAuthorized = expectedSecret
+    ? querySecret === expectedSecret ||
+      authHeader === expectedSecret ||
+      (!isProd && url.searchParams.get("test") === "1")
+    : !isProd;
 
   if (!isAuthorized) {
     return new Response(JSON.stringify({ error: "Unauthorized: cron secret missing or invalid" }), {
@@ -232,6 +232,15 @@ async function executeDispatch(request: Request) {
   }
 
   const vapid = getVapidConfig();
+  if (!vapid.privateKey) {
+    return Response.json(
+      {
+        ok: false,
+        error: "VAPID_PRIVATE_KEY is missing in production environment secrets.",
+      },
+      { status: 500 },
+    );
+  }
   const now = new Date();
 
   // Load all registered subscriptions from persistent store

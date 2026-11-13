@@ -20,10 +20,11 @@ const FALLBACK_VAPID_PRIV = "jLfyIY-9kl9tLPDjz7QA4plKoyqWuisS3zDwFU2JquQ";
 const FALLBACK_VAPID_SUB = "mailto:support@pinkcare.app";
 
 export function getVapidConfig(): VapidKeys {
+  const isProd = process.env.NODE_ENV === "production";
   return {
     subject: process.env.VAPID_SUBJECT || FALLBACK_VAPID_SUB,
     publicKey: process.env.VAPID_PUBLIC_KEY || FALLBACK_VAPID_PUB,
-    privateKey: process.env.VAPID_PRIVATE_KEY || FALLBACK_VAPID_PRIV,
+    privateKey: process.env.VAPID_PRIVATE_KEY || (isProd ? "" : FALLBACK_VAPID_PRIV),
   };
 }
 
@@ -125,6 +126,11 @@ export const sendDirectPush = createServerFn({ method: "POST" })
   .inputValidator((d) => PushNotificationSchema.parse(d))
   .handler(async ({ data }) => {
     const v = getVapidConfig();
+    if (!v.privateKey) {
+      const errMessage = "VAPID_PRIVATE_KEY is not configured in production environment secrets.";
+      updatePushDeliveryStats({ failed: 1, lastError: errMessage });
+      return { ok: false, expired: false, error: errMessage };
+    }
     const sub: WPSub = {
       endpoint: data.endpoint,
       expirationTime: null,

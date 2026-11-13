@@ -455,7 +455,7 @@ export function toggleSavePost(postId: string, userId: string): boolean {
 
 // Submit a moderation report
 export function submitCommunityReport(reportData: {
-  targetType: "post" | "comment";
+  targetType: "post" | "comment" | "chat_message" | "direct_message";
   targetId: string;
   targetPreview: string;
   authorId: string;

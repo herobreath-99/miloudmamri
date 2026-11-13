@@ -7,9 +7,8 @@
     "dev": "vite dev --host 0.0.0.0 --port 3000",
     "build": "NODE_ENV=production vite build && rm -rf dist && mkdir -p dist && cp -a .output/public/. dist/ && cp -a .output/server/. dist/server/ 2>/dev/null || true",
     "build:dev": "vite build --mode development",
-    "preview": "nitro preview",
-    "start": "nitro preview",
-    "deploy": "wrangler deploy --config .output/server/wrangler.json",
+    "preview": "NITRO_HOST=0.0.0.0 NITRO_PORT=${PORT:-3000} HOST=0.0.0.0 node .output/server/index.mjs",
+    "start": "NITRO_HOST=0.0.0.0 NITRO_PORT=${PORT:-3000} HOST=0.0.0.0 node .output/server/index.mjs",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

@@ -98,9 +98,10 @@ function AdminDashboardPage() {
       if (prev === "doctors" && !hasPermission(role, "verify_professionals")) return "analytics";
       if (prev === "content" && !hasPermission(role, "manage_articles")) return "analytics";
       if (prev === "community" && !hasPermission(role, "moderate_community")) return "analytics";
-      if (prev === "notifications" && !hasPermission(role, "manage_notifications"))
+      if (prev === "notifications" && !hasPermission(role, "manage_notification_templates"))
         return "analytics";
-      if (prev === "settings" && !hasPermission(role, "manage_settings")) return "analytics";
+      if (prev === "settings" && !hasPermission(role, "manage_platform_settings"))
+        return "analytics";
       if (prev === "audit" && !hasPermission(role, "view_audit_logs")) return "analytics";
       return prev;
     });
@@ -718,48 +719,49 @@ function AdminDashboardPage() {
       )}
 
       {/* TAB 6: NOTIFICATION TEMPLATES */}
-      {activeTab === "notifications" && hasPermission(currentRole, "manage_notifications") && (
-        <div className="space-y-3">
-          {templates.map((tpl) => (
-            <div
-              key={tpl.id}
-              className="glass rounded-3xl p-4 border border-border space-y-2 text-xs"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-foreground text-sm">{tpl.titleAr}</span>
-                <span
-                  className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
-                    tpl.enabled
-                      ? "bg-emerald-500/10 text-emerald-600"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {tpl.enabled ? "مفعل" : "معطل"}
-                </span>
+      {activeTab === "notifications" &&
+        hasPermission(currentRole, "manage_notification_templates") && (
+          <div className="space-y-3">
+            {templates.map((tpl) => (
+              <div
+                key={tpl.id}
+                className="glass rounded-3xl p-4 border border-border space-y-2 text-xs"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-foreground text-sm">{tpl.titleAr}</span>
+                  <span
+                    className={`px-2 py-0.2 rounded-full text-[10px] font-bold ${
+                      tpl.enabled
+                        ? "bg-emerald-500/10 text-emerald-600"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {tpl.enabled ? "مفعل" : "معطل"}
+                  </span>
+                </div>
+                <p className="text-foreground/80 text-[11px] leading-relaxed bg-muted/30 p-2.5 rounded-xl">
+                  {tpl.bodyAr}
+                </p>
+                <div className="flex items-center justify-between pt-1 text-[10px] text-muted-foreground">
+                  <span>التصنيف: {tpl.category}</span>
+                  <button
+                    onClick={() => {
+                      const next = !tpl.enabled;
+                      saveNotificationTemplate({ ...tpl, enabled: next }, actor);
+                      refreshAll();
+                    }}
+                    className="font-semibold text-primary underline"
+                  >
+                    {tpl.enabled ? "تعطيل القالب" : "تفعيل القالب"}
+                  </button>
+                </div>
               </div>
-              <p className="text-foreground/80 text-[11px] leading-relaxed bg-muted/30 p-2.5 rounded-xl">
-                {tpl.bodyAr}
-              </p>
-              <div className="flex items-center justify-between pt-1 text-[10px] text-muted-foreground">
-                <span>التصنيف: {tpl.category}</span>
-                <button
-                  onClick={() => {
-                    const next = !tpl.enabled;
-                    saveNotificationTemplate({ ...tpl, enabled: next }, actor);
-                    refreshAll();
-                  }}
-                  className="font-semibold text-primary underline"
-                >
-                  {tpl.enabled ? "تعطيل القالب" : "تفعيل القالب"}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
 
       {/* TAB 7: PLATFORM SETTINGS */}
-      {activeTab === "settings" && hasPermission(currentRole, "manage_settings") && (
+      {activeTab === "settings" && hasPermission(currentRole, "manage_platform_settings") && (
         <div className="glass rounded-3xl p-5 border border-border space-y-4 text-xs">
           <h3 className="font-bold text-sm text-foreground flex items-center gap-1.5">
             <Settings className="w-4 h-4 text-purple-600" />

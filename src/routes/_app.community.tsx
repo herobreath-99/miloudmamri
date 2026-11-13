@@ -273,9 +273,10 @@ function CommunityPage() {
         <CreateGroupModal
           currentUserId={currentUserId}
           onClose={() => setShowCreateGroup(false)}
-          onCreated={(group) => {
+          onCreated={(groupId) => {
             setShowCreateGroup(false);
-            setSelectedGroup(group);
+            const found = getCommunityGroups().find((g) => g.id === groupId) ?? null;
+            setSelectedGroup(found);
             setActiveTab("groups");
           }}
           lang={lang}
@@ -284,10 +285,12 @@ function CommunityPage() {
 
       {showProfileModal && (
         <CommunityProfileModal
-          currentUserId={currentUserId}
-          currentUserName={currentUserName}
-          onClose={() => setShowProfileModal(false)}
-          onUpdated={(profile) => setUserCommunityProfile(profile)}
+          userId={currentUserId}
+          defaultName={currentUserName}
+          onClose={() => {
+            setShowProfileModal(false);
+            setUserCommunityProfile(getCommunityUserProfile(currentUserId, currentUserName));
+          }}
           lang={lang}
         />
       )}

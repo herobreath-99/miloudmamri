@@ -4,63 +4,30 @@
 //     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... } }) if needed.
+import type {} from "nitro/vite";
+import type { NitroHooks } from "nitro/types";
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-// Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-// @cloudflare/vite-plugin builds from this — wrangler.jsonc main alone is insufficient.
-interface RollupWarnObject {
-  code?: string;
-  message?: string;
-}
-
-type RollupWarnHandler = (
-  warning: RollupWarnObject,
-  defaultHandler: (w: RollupWarnObject) => void,
-) => void;
-
-interface RollupOutputObject {
-  manualChunks?: (id: string, meta: unknown) => string | void;
-  [key: string]: unknown;
-}
-
-interface RollupConfigWithWarn {
-  onwarn?: RollupWarnHandler;
-  output?: RollupOutputObject | RollupOutputObject[];
-}
-
-function patchManualChunks(output?: RollupOutputObject | RollupOutputObject[]) {
-  if (!output) return;
-  const outputs = Array.isArray(output) ? output : [output];
-  for (const out of outputs) {
-    const origManualChunks = out.manualChunks;
-    out.manualChunks = (id: string, meta: unknown) => {
-      if (
-        id.includes("serialize-error") ||
-        id.includes("custom-error") ||
-        id.includes("webcrypto-web-push")
-      ) {
-        return "push-crypto";
-      }
-      if (typeof origManualChunks === "function") {
-        const chunk = origManualChunks(id, meta);
-        if (typeof chunk === "string" && chunk.includes("error")) {
-          return chunk.replace(/error/g, "err");
-        }
-        return chunk;
-      }
-    };
-  }
-}
-
-interface NitroRendererInstance {
-  hooks?: {
-    hook: (
-      event: string,
-      callback: (_subNitro: unknown, rollupConfig: RollupConfigWithWarn) => void,
-    ) => void;
+const onRollupBefore: NitroHooks["rollup:before"] = (_nitro, rollupConfig) => {
+  const out = rollupConfig.output;
+  if (!out || Array.isArray(out)) return;
+  const prevManualChunks = typeof out.manualChunks === "function" ? out.manualChunks : undefined;
+  out.manualChunks = (id, meta) => {
+    if (
+      id.includes("serialize-error") ||
+      id.includes("custom-error") ||
+      id.includes("webcrypto-web-push")
+    ) {
+      return "_libs/block65__webcrypto-web-push";
+    }
+    if (id.includes("node-domexception") || id.includes("fetch-blob")) {
+      return "_libs/fetch-blob";
+    }
+    return prevManualChunks ? prevManualChunks(id, meta) : undefined;
   };
-}
+};
 
+// Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
 export default defineConfig({
   plugins: [
     {
@@ -84,65 +51,14 @@ export default defineConfig({
     server: { entry: "server" },
   },
   nitro: {
-    hooks: {
-      "rollup:before"(_nitro: unknown, rollupConfig: RollupConfigWithWarn) {
-        if (rollupConfig) {
-          patchManualChunks(rollupConfig.output);
-          const origOnwarn = rollupConfig.onwarn;
-          rollupConfig.onwarn = (
-            warning: RollupWarnObject,
-            warn: (w: RollupWarnObject) => void,
-          ) => {
-            if (
-              warning?.code === "MODULE_LEVEL_DIRECTIVE" ||
-              (typeof warning?.message === "string" &&
-                (warning.message.includes("Module level directives cause errors when bundled") ||
-                  warning.message.includes("use client")))
-            ) {
-              return;
-            }
-            if (origOnwarn) {
-              origOnwarn(warning, warn);
-            } else {
-              warn(warning);
-            }
-          };
-        }
-      },
-      "prerender:init"(prerenderer: NitroRendererInstance) {
-        prerenderer?.hooks?.hook(
-          "rollup:before",
-          (_subNitro: unknown, rollupConfig: RollupConfigWithWarn) => {
-            if (rollupConfig) {
-              patchManualChunks(rollupConfig.output);
-              const origOnwarn = rollupConfig.onwarn;
-              rollupConfig.onwarn = (
-                warning: RollupWarnObject,
-                warn: (w: RollupWarnObject) => void,
-              ) => {
-                if (
-                  warning?.code === "MODULE_LEVEL_DIRECTIVE" ||
-                  (typeof warning?.message === "string" &&
-                    (warning.message.includes(
-                      "Module level directives cause errors when bundled",
-                    ) ||
-                      warning.message.includes("use client")))
-                ) {
-                  return;
-                }
-                if (origOnwarn) {
-                  origOnwarn(warning, warn);
-                } else {
-                  warn(warning);
-                }
-              };
-            }
-          },
-        );
-      },
-    },
+    preset: "node-server",
   },
   vite: {
+    nitro: {
+      hooks: {
+        "rollup:before": onRollupBefore,
+      },
+    },
     server: {
       host: "0.0.0.0",
       port: 3000,
@@ -162,7 +78,10 @@ export default defineConfig({
             }
           },
         },
-        onwarn(warning, defaultHandler) {
+        onwarn(
+          warning: { code?: string; message: string },
+          defaultHandler: (w: { code?: string; message: string }) => void,
+        ) {
           if (
             warning.code === "MODULE_LEVEL_DIRECTIVE" ||
             (typeof warning.message === "string" &&

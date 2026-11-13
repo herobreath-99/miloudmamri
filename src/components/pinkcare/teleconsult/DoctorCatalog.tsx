@@ -97,6 +97,7 @@ export function DoctorCatalog({
   const [selectedDoctorProfile, setSelectedDoctorProfile] = useState<DoctorProfile | null>(null);
   const [bookingDoctor, setBookingDoctor] = useState<DoctorProfile | null>(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const uiLang: "ar" | "en" = lang === "ar" || lang === "dz" ? "ar" : "en";
 
   const loadDoctors = () => {
     setDoctors(getDoctors());
@@ -304,7 +305,7 @@ export function DoctorCatalog({
           doctor={selectedDoctorProfile}
           onClose={() => setSelectedDoctorProfile(null)}
           onBook={(doc) => setBookingDoctor(doc)}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
@@ -316,7 +317,7 @@ export function DoctorCatalog({
           patientName={patientName}
           onClose={() => setBookingDoctor(null)}
           onSuccess={onBookingSuccess}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
@@ -325,7 +326,7 @@ export function DoctorCatalog({
         <DoctorVerificationModal
           onClose={() => setShowApplyModal(false)}
           onSubmitted={loadDoctors}
-          lang={lang}
+          lang={uiLang}
         />
       )}
     </div>

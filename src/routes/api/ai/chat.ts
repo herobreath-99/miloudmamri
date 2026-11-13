@@ -77,7 +77,7 @@ export const Route = createFileRoute("/api/ai/chat")({
 
           const fallbackEducationalReply =
             lang === "en"
-              ? `Dear ${userName} 🌸\n\nYour question is very important: gentle movement, listening to your body, and consistent care are essential for your recovery. They help prevent stiffness, improve lymphatic drainage to minimize lymphedema, and safely restore your natural range of motion.\n\n💡 *Helpful Note:* To enable direct, personalized responses via Google Gemini, you can set the free GEMINI_API_KEY in your hosting environment variables (no Google Cloud Billing required). Meanwhile, all core PinkCare features (3D interactive rehabilitation, teleconsultations, and community support) are 100% available!`
+              ? `Dear ${userName} 🌸\n\nYour question is very important: gentle movement, listening to your body, and consistent care are essential for your recovery. They help prevent stiffness, improve lymphatic drainage to minimize lymphedema, and safely restore your natural range of motion.\n\n💡 *Helpful Note:* To enable live personalized responses via Google Gemini, verify your GEMINI_API_KEY in Settings > Secrets. Meanwhile, all core PinkCare features (3D interactive rehabilitation, teleconsultations, and community support) remain 100% available!`
               : lang === "fr"
                 ? `Chère ${userName} 🌸\n\nVotre question est essentielle : les mouvements doux, l'écoute de votre corps et l'accompagnement régulier sont cruciaux pour votre rétablissement. Ils aident à prévenir les raideurs, améliorer la circulation lymphatique et restaurer votre bien-être au quotidien.\n\n💡 *Rappel bienveillant :* Pour activer la génération en direct de réponses personnalisées via Google Gemini, vous pouvez attacher une clé API valide dans les paramètres du serveur (Settings > Secrets). En attendant, toutes les fonctionnalités de PinkCare (exercices 3D, consultations médicales et soutien communautaire) restent 100% à votre disposition !`
                 : lang === "dz"
@@ -97,7 +97,10 @@ export const Route = createFileRoute("/api/ai/chat")({
 
           // If no API key or placeholder key, immediately provide the educational response without triggering 400 error
           const isValidKeyFormat =
-            apiKey && apiKey.length > 20 && !apiKey.includes("YOUR_") && apiKey.startsWith("AIza");
+            Boolean(apiKey) &&
+            apiKey!.length > 20 &&
+            !apiKey!.includes("YOUR_") &&
+            !apiKey!.toLowerCase().includes("placeholder");
 
           if (!isValidKeyFormat) {
             return Response.json({
@@ -149,7 +152,7 @@ export const Route = createFileRoute("/api/ai/chat")({
             });
 
             const response = await ai.models.generateContent({
-              model: "gemini-3.8-flash",
+              model: "gemini-4-hydrogen",
               contents,
               config: {
                 systemInstruction,

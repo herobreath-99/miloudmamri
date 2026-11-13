@@ -92,6 +92,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [activeDetailPost, setActiveDetailPost] = useState<CommunityPost | null>(null);
   const [activeReportPost, setActiveReportPost] = useState<CommunityPost | null>(null);
+  const uiLang: "ar" | "en" = lang === "ar" || lang === "dz" ? "ar" : "en";
 
   const loadPosts = () => {
     const all = getCommunityPosts();
@@ -162,7 +163,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
       </div>
 
       {/* Guidelines Banner */}
-      <CommunityGuidelinesBanner lang={lang} />
+      <CommunityGuidelinesBanner lang={uiLang} />
 
       {/* Search & Saved Toggle */}
       <div className="flex items-center gap-2">
@@ -230,7 +231,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
               onOpenDetail={(p) => setActiveDetailPost(p)}
               onOpenReport={(p) => setActiveReportPost(p)}
               onPostUpdated={loadPosts}
-              lang={lang}
+              lang={uiLang}
             />
           ))
         ) : (
@@ -264,7 +265,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
           currentUserName={currentUserName}
           onClose={() => setShowCreateModal(false)}
           onPostCreated={loadPosts}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
@@ -276,7 +277,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
           currentUserName={currentUserName}
           onClose={() => setActiveDetailPost(null)}
           onPostUpdated={loadPosts}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
@@ -290,7 +291,7 @@ export function CommunityFeed({ currentUserId, currentUserName, lang = "ar" }: C
           reporterId={currentUserId}
           reporterName={currentUserName}
           onClose={() => setActiveReportPost(null)}
-          lang={lang}
+          lang={uiLang}
         />
       )}
     </div>

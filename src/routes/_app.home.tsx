@@ -251,6 +251,7 @@ function HomePage() {
       {/* EMOTIONAL WELL-BEING & MOOD CHECK-IN CARD */}
       <Link
         to="/wellbeing"
+        search={{ tab: "journal", crisis: false }}
         className="block glass rounded-3xl p-4.5 border border-primary/30 hover:neon-glow transition relative overflow-hidden shadow-xs"
         style={{
           background:

@@ -5,6 +5,7 @@ import {
   isSupabaseConfigured,
   getActiveSupabaseUrl,
   getActiveSupabaseAnonKey,
+  applyRuntimeSupabaseConfig,
   resetSupabaseClientInstance,
 } from "@/integrations/supabase/client";
 import {
@@ -197,7 +198,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     async function initAuth() {
       try {
-        const configured = isSupabaseConfigured();
+        let configured = isSupabaseConfigured();
+
+        if (!configured) {
+          try {
+            const cfgRes = await fetch("/api/public/config");
+            if (cfgRes.ok) {
+              const cfg = (await cfgRes.json()) as {
+                supabaseUrl?: string | null;
+                supabasePublishableKey?: string | null;
+              };
+              if (applyRuntimeSupabaseConfig(cfg.supabaseUrl, cfg.supabasePublishableKey)) {
+                configured = isSupabaseConfigured();
+              }
+            }
+          } catch {
+            // Keep graceful local fallback when offline
+          }
+        }
+
+        if (!isMounted) return;
         setIsConfigured(configured);
 
         if (configured) {

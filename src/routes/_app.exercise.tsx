@@ -931,11 +931,14 @@ function UnifiedExerciseStudio() {
       {/* 7. Timer & Sleek Progress Bar */}
       <div className="glass-dark rounded-2xl p-2.5 flex items-center gap-3 border border-fuchsia-400/25">
         <div className="flex items-center gap-1.5 text-xs font-bold text-white shrink-0 tabular-nums">
-          <RotateCcw
+          <button
+            type="button"
             onClick={reset}
-            className="w-3.5 h-3.5 text-fuchsia-300 cursor-pointer hover:rotate-180 transition-transform"
             title={lang === "ar" ? "إعادة المؤقت" : "Reset Timer"}
-          />
+            className="inline-flex items-center justify-center cursor-pointer text-fuchsia-300 hover:rotate-180 transition-transform"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
           <span>
             {elapsedFormatted} / {targetFormatted}
           </span>

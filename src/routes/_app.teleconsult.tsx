@@ -22,6 +22,7 @@ function TeleconsultPage() {
   const [bookings, setBookings] = useState<ConsultationBooking[]>([]);
   const [activeCallBooking, setActiveCallBooking] = useState<ConsultationBooking | null>(null);
   const [showAdminPortal, setShowAdminPortal] = useState(false);
+  const uiLang: "ar" | "en" = lang === "ar" || lang === "dz" ? "ar" : "en";
 
   const patientId = profile?.id || "patient-current";
   const patientName = profile ? `${profile.first_name} ${profile.last_name}` : "المستفيدة الكريمة";
@@ -124,7 +125,7 @@ function TeleconsultPage() {
           bookings={bookings}
           onJoinCall={(b) => setActiveCallBooking(b)}
           onRefresh={refreshBookings}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
@@ -136,13 +137,13 @@ function TeleconsultPage() {
             setActiveCallBooking(null);
             refreshBookings();
           }}
-          lang={lang}
+          lang={uiLang}
         />
       )}
 
       {/* Admin Verification Portal Modal */}
       {showAdminPortal && (
-        <AdminPortalModal onClose={() => setShowAdminPortal(false)} lang={lang} />
+        <AdminPortalModal onClose={() => setShowAdminPortal(false)} lang={uiLang} />
       )}
     </div>
   );

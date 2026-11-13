@@ -160,6 +160,7 @@ function ProfilePage() {
 
         <Link
           to="/wellbeing"
+          search={{ tab: "journal", crisis: false }}
           className="w-full flex items-center justify-between py-3 border-b border-border"
         >
           <ChevronLeft className="w-4 h-4 text-muted-foreground" />
@@ -325,7 +326,12 @@ function ProfilePage() {
         </button>
       </div>
 
-      {showAdmin && <AdminPortalModal onClose={() => setShowAdmin(false)} lang={lang} />}
+      {showAdmin && (
+        <AdminPortalModal
+          onClose={() => setShowAdmin(false)}
+          lang={lang === "ar" || lang === "dz" ? "ar" : "en"}
+        />
+      )}
       {showPrivacyModal && (
         <PrivacySecurityModal
           onClose={() => setShowPrivacyModal(false)}
